@@ -1,0 +1,31 @@
+:javascript
+	$(function() {
+		$('#quote_message').keyup(function() {
+			var content_length = $(this).val().length;
+			var remaining_length = 140 - content_length;
+			$('#char_count').html(remaining_length);
+			if (remaining_length < 21 && remaining_length > 9) {
+				$('#char_count').removeClass('red');
+				$('#char_count').addClass('dark_red');
+			} else if (remaining_length <= 9) {
+				$('#char_count').removeClass('dark_red');
+				$('#char_count').addClass('red');
+			} else {
+				$('#char_count').removeClass('dark_red').removeClass('red');
+			}
+		})
+	})
+
+- form_for Quote.new, :html => { :id => "new_quote_form" } do |f|
+	%h3{:style => "float: left;"} What are you doing?
+	%h3#char_count 140
+	.clear
+	= f.text_area :message
+	#latest_message
+		%strong Latest:
+		== #{h @last_quote.message} #{distance_of_time_in_words_to_now(@last_quote.created_at)} ago
+	#submit_button
+		= f.submit "Post"
+	.clear
+	
+= render :partial => 'quotes_list', :locals =>  { :quotes => @quotes }

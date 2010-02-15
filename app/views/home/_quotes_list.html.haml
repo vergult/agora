@@ -1,0 +1,11 @@
+%ul#quotes_list
+	- quotes.each do |quote|
+		-# Should make a helper for this
+		%li{:class => quotes.first == quote ? "first" : nil}
+			= image_tag quote.user.gravatar_url
+			.quote_message
+				= link_to quote.user.username, user_quotes_path(quote.user.username)
+				= h quote.message
+				.time_ago
+					== #{distance_of_time_in_words_to_now(quote.created_at)} ago
+			.clear

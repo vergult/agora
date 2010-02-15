@@ -1,0 +1,11 @@
+%h1
+	= image_tag @user.gravatar_url, :align => 'top'
+	= @user.username
+
+- form_tag toggle_follow_path do
+	- if current_user.is_friend? @user
+		= submit_tag "Following"
+	- else
+		= submit_tag "Not Following"
+
+= render :partial => 'quotes_list', :locals =>  { :quotes => @quotes }

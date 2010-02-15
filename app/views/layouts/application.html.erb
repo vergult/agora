@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title><%= h(yield(:title) || "Untitled") %></title>
+    <%= stylesheet_link_tag 'application' %>
+		<%= javascript_include_tag :defaults %>
+    <%= yield(:head) %>
+  </head>
+  <body>
+		<div id="header">
+			<div id="logo">
+			</div>
+			<div id="top_links_container">
+				<% if current_user -%>
+					<%= link_to "Home", root_path %> |
+					Logged in as <%= current_user.username %> |
+					<%= link_to "Logout", logout_path %>
+				<% else -%>
+					<%= link_to "Login", login_path %>
+				<% end -%>
+			</div>
+		</div>
+		<div class="clear"></div>
+    <div id="container">
+			<table class="columns" cellspacing="0">
+				<tbody>
+					<tr>
+						
+						<td id="sidebar" class="column">
+							<div id="sidecontent">
+								<div class="section">
+									<% if current_user -%>
+										<%= render :partial => '/includes/side_contents' %>
+									<% end -%>
+								</div>
+							</div>
+						</td>
+						<td id="main" class="column">
+							<div class="content">
+      					<%- flash.each do |name, msg| -%>
+        					<%= content_tag :div, msg, :id => "flash_#{name}" %>
+      					<%- end -%>
+      
+      					<%- if show_title? -%>
+        					<h1><%=h yield(:title) %></h1>
+      					<%- end -%>
+      
+      					<%= yield %>
+							</div>
+						</td>
+						
+				</tr>
+			</tbody>
+		</table>
+  </body>
+</html>

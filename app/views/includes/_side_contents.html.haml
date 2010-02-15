@@ -1,0 +1,20 @@
+#my_info
+	= link_to image_tag(current_user.gravatar_url(:size => 30), :border => 0), user_quotes_path(current_user.username)
+	.contents
+		= link_to current_user.username, user_quotes_path(current_user.username)
+		%br
+		.small= pluralize(current_user.quotes.size, "Quote")
+.clear
+
+#following_follower_container
+	%h4= link_to "#{current_user.friends.count} following", following_path
+	%h4= pluralize(current_user.friends_of.size, "follower")
+
+- form_tag search_path do
+	= text_field_tag :q, @q
+	= submit_tag "Ok", :id => "search_submit_button"
+	
+#thumbnail_container
+	%h4 Followers
+	- current_user.friends.each do |friend|
+		= link_to image_tag(friend.gravatar_url(:size => 25), :borer => 0, :alt => friend.username, :title => friend.username), user_quotes_path(friend.username)

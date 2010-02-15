@@ -1,0 +1,27 @@
+%ul#quotes_list
+	- @friends.each do |friend|
+		-# Should make a helper for this
+		%li{:id => friend.username, :class => @friends.first == friend ? "first" : nil}
+			= image_tag friend.gravatar_url
+			.quote_message{:style => "width: 335px;"}
+				%h3{:style => "margin: 0; font-size: 16px;"}= link_to friend.username, user_quotes_path(friend.username)
+				- if friend.quotes.size > 0
+					= h friend.quotes.last.message
+				== #{distance_of_time_in_words_to_now(friend.quotes.last.created_at)} ago
+			.button_container
+				= submit_tag "Stop Following", :class => "ajax_button", :name => friend.username
+			.clear
+			
+:javascript
+	$(function() {
+		$('.ajax_button').click(function() {
+			var friend_username = $(this).attr('name');
+			$.ajax({
+			   type: "POST",
+			   url: "/remove_friend/" + friend_username,
+			   success: function(msg){
+					 $('#' + msg).slideUp('slow');
+			   }
+			 });
+		})
+	});

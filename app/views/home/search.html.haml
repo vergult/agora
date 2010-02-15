@@ -1,0 +1,35 @@
+%ul#quotes_list
+	- @users.each do |user|
+		-# Should make a helper for this
+		%li{:id => user.username, :class => @users.first == user ? "first" : nil}
+			= image_tag user.gravatar_url
+			.quote_message{:style => "width: 335px;"}
+				%h3{:style => "margin: 0; font-size: 16px;"}= link_to user.username, user_quotes_path(user.username)
+				- if user.quotes.size > 0
+					= h user.quotes.last.message
+				== #{distance_of_time_in_words_to_now(user.quotes.last.created_at)} ago
+			.button_container
+				- if current_user.is_friend? user
+					= submit_tag "Stop Following", :class => "ajax_button", :name => user.username, :id => "btn_#{user.username}"
+				- else
+					= submit_tag "Follow", :class => "ajax_button", :name => user.username, :id => "btn_#{user.username}"
+			.clear
+			
+:javascript
+	$(function() {
+		$('.ajax_button').click(function() {
+			var user_username = $(this).attr('name');
+			$.ajax({
+			   type: "POST",
+			   url: "/" + user_username + "/toggle_follow_via_ajax",
+			   success: function(msg){
+					 var elm = $('#btn_' + msg);
+					 if (elm.val() == "Stop Following") {
+						elm.val("Follow");
+					} else {
+						elm.val("Stop Following");
+					}
+			   }
+			 });
+		})
+	});
